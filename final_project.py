@@ -11,20 +11,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def extract_xlsx(xlsx_name: str, ws_name: str) -> pd.ExcelFile:
+def extract_xlsx(xlsx_name, ws_name):
     """
     This function takes the path of a multi-sheet Excel workbook file and the
-    name of the worksheet of interest and returns a Pandas dataframe.
+    name of the workshee of interest and returns a Pandas dataframe.
     """
     xlsx = pd.ExcelFile(xlsx_name)
     return pd.read_excel(xlsx, ws_name)
 
 
-def merge_geo(
-    shp_file_name: str,
-    xlsx_file: None | pd.ExcelFile = None,
-    csv_file_name: None | str = None,
-) -> gpd.GeoDataFrame:
+def merge_geo(shp_file_name, xlsx_file=None, csv_file_name=None):
     """
     This function takes the name of the shapes file and Excel workbook file
     and returns a geospatial dataframe that joins these two datasets by state.
@@ -33,8 +29,8 @@ def merge_geo(
     if xlsx_file is None:
         csv_file = pd.read_csv(csv_file_name)
         csv_file = csv_file[
-            (csv_file["State Name"] != "Alaska") & (csv_file["State Name"]
-                                                    != "Hawaii")
+            (csv_file["State Name"] != "Alaska") &
+            (csv_file["State Name"] != "Hawaii")
         ]
         merged_data = shp_file.merge(
             csv_file, left_on="NAMELSAD", right_on="State Name", how="outer"
@@ -47,8 +43,7 @@ def merge_geo(
 
 # (1) How has the number of drug overdose cases changed between 2015 and 2023
 # in Washington State?
-def drug_overdose_change(data: gpd.GeoDataFrame,
-                         start=2015.0, end=2023.0) -> None:
+def drug_overdose_change(data, start=2015.0, end=2023.0) -> None:
     """
     This function takes in the geospatial dataframe and returns the number
     of drug overdose cases from 2015-2023.
@@ -66,8 +61,8 @@ def drug_overdose_change(data: gpd.GeoDataFrame,
         county_data,
         x="Year",
         y="Death Count",
-        title=f"Drug Overdose Deaths in WA between {int(start)} \
-            and {int(end)}",
+        title=f"Drug Overdose Deaths in WA between \
+            {int(start)} and {int(end)}",
         markers=True,
     )
     fig.update_layout(title_x=0.5, title_y=0.95, font=dict(size=20))
@@ -78,9 +73,7 @@ def drug_overdose_change(data: gpd.GeoDataFrame,
 
 #  (2) Which counties in Washington state have the highest number/rate
 #  of drug overdose cases?
-def overdose_deaths_counties(
-    data: gpd.GeoDataFrame, drug_name="Any Drug", year_date=2022.0
-) -> None:
+def overdose_deaths_counties(data, drug_name="Any Drug", year_date=2022.0):
     """
     This function takes in the geospatial dataframe and returns the counties
     in Washington that have the highest number of drug overdose cases.
@@ -103,13 +96,6 @@ def overdose_deaths_counties(
     plt.savefig("county_population_map.png")
 
 
-# This is data with national deaths/overdoses  with geo
-national_geo_data = merge_geo(
-    "/content/Data/geodata/cb_2022_us_county_500k.shp",
-    csv_file_name="/content/Data/NationalOverdose.csv",
-)
-
-
 # (3) How does the number of overdoses in WA compare to number of overdoses in
 # other states in the USA?
 
@@ -125,17 +111,16 @@ national_geo_data = merge_geo(
 
 
 def main():
-    xlsx_file = extract_xlsx("/Data/OverdoseDeathWA.xlsx",
+    xlsx_file = extract_xlsx("Data/OverdoseDeathWA.xlsx",
                              "By Location and Date")
-    wa_geo_data = merge_geo(
-        "/content/Data/geodata/cb_2022_us_county_500k.shp", xlsx_file
-    )
-
-    # Commented for flake 8 since never used
+    wa_geo_data = merge_geo("Data/geodata/cb_2022_us_county_500k.shp",
+                            xlsx_file)
+  
+    # Commented bc flake 8 didn't like that it wasn't used yet
     '''
     national_geo_data = merge_geo(
-        "/content/Data/geodata/cb_2022_us_county_500k.shp",
-        csv_file_name="/content/Data/NationalOverdose.csv",
+        "Data/geodata/cb_2022_us_county_500k.shp",
+        csv_file_name="Data/NationalOverdose.csv",
     )
     '''
     drug_overdose_change(wa_geo_data)
