@@ -115,7 +115,7 @@ def main():
                              "By Location and Date")
     wa_geo_data = merge_geo("Data/geodata/cb_2022_us_county_500k.shp",
                             xlsx_file)
-  
+
     # Commented bc flake 8 didn't like that it wasn't used yet
     '''
     national_geo_data = merge_geo(
