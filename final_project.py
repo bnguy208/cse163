@@ -2,7 +2,11 @@
 Daria Gileva, Brandon Nguyen, Karin Stoddart
 CSE 163 AA
 
-Write about final project bluh bluh bluh bluh
+This program explores opioid overdose cases in the United States. It uses
+national drug overdose data and Washington drug overdose data. The methods
+in this program read in these datasets and combine them with geospatial
+data to produce visualizations that allow us to answer questions about
+opioid overdose across the U.S. and within Washington.
 """
 
 import plotly.express as px
