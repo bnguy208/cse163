@@ -11,7 +11,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def extract_xlsx(xlsx_name: str, ws_name: str) -> pd.ExcelFile:
+def extract_xlsx(xlsx_name, ws_name):
   """
   This function takes the path of a multi-sheet Excel workbook file and the
   name of the workshee of interest and returns a Pandas dataframe.
@@ -20,7 +20,7 @@ def extract_xlsx(xlsx_name: str, ws_name: str) -> pd.ExcelFile:
   return pd.read_excel(xlsx, ws_name)
 
 
-def merge_geo(shp_file_name: str, xlsx_file: None | pd.ExcelFile = None, csv_file_name: None | str = None) -> gpd.GeoDataFrame:
+def merge_geo(shp_file_name, xlsx_file=None, csv_file_name=None):
   """
   This function takes the name of the shapes file and Excel workbook file
   and returns a geospatial dataframe that joins these two datasets by state.
@@ -37,7 +37,7 @@ def merge_geo(shp_file_name: str, xlsx_file: None | pd.ExcelFile = None, csv_fil
 
 # (1) How has the number of drug overdose cases changed between 2015 and 2023
 # in Washington State?
-def drug_overdose_change(data: gpd.GeoDataFrame, start=2015.0,
+def drug_overdose_change(data, start=2015.0,
                          end=2023.0) -> None:
   """
   This function takes in the geospatial dataframe and returns the number
@@ -62,7 +62,7 @@ def drug_overdose_change(data: gpd.GeoDataFrame, start=2015.0,
 
 #  (2) Which counties in Washington state have the highest number/rate
 #  of drug overdose cases?
-def overdose_deaths_counties(data: gpd.GeoDataFrame, drug_name = 'Any Drug', year_date = 2022.0) -> None:
+def overdose_deaths_counties(data, drug_name = 'Any Drug', year_date = 2022.0):
   """
   This function takes in the geospatial dataframe and returns the counties
   in Washington that have the highest number of drug overdose cases.
