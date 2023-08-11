@@ -84,15 +84,17 @@ def drug_overdose_change(data, start=2015.0, end=2023.0) -> None:
 
 
 def overdose_geo(data, start=2015.0, end=2023.0) -> pd.DataFrame:
-    data = data[data["STATE_NAME"] == "Washington"]
-    drug = data["Drug Category"] == "Any Drug"
-    county = data["Geography"] == "County"
-    year = (data["Year"] >= (start - 1)) & (data["Year"] <= (end + 1))
-    time = data["Time Aggregation"] == "1 year rolling counts"
-    remove_star = data["Death Count"] != "*"
-    county_data = data[drug & county & time & year & remove_star]
+    wa_data = data[data["STATE_NAME"] == "Washington"].copy()
+    drug = wa_data["Drug Category"] == "Any Drug"
+    county = wa_data["Geography"] == "County"
+    wa_data["Year"] = pd.to_numeric(data["Year"], errors="coerce")
+    year = (wa_data["Year"] >= (start - 1)) & (wa_data["Year"] <= (end + 1))
+    time = wa_data["Time Aggregation"] == "1 year rolling counts"
+    remove_star = wa_data["Death Count"] != "*"
+    county_data = wa_data[drug & county & time & year & remove_star].copy()
     county_data["Death Count"] = county_data["Death Count"].astype("int")
-    county_data = county_data.dissolve(by="Year", aggfunc="sum").reset_index()
+    county_data = \
+        county_data.groupby("Year").agg({"Death Count": "sum"}).reset_index()
 
     return county_data
 
