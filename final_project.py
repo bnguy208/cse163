@@ -132,11 +132,11 @@ def overdose_deaths_counties(data, drug_name="Any Drug", year_date=2022.0):
 # (3) How does the number of overdoses in WA compare to number of overdoses in
 # other states in the USA?
 
-# Create bar graph
+# Create bar graph with drug overdose deaths in United States every month in
+# years 2019 and 2020
 
-# Normalize cases in Washington by dividing by total WA pop
-
-# Normalize national case count by dividing by total national pop
+# Create maps of overdose deaths in months with highest number of deaths
+# in the year 2019 and 2020
 
 
 # (4) What is the most prevalent drug that has been associated with drug
