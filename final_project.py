@@ -2,7 +2,7 @@
 Daria Gileva, Brandon Nguyen, Karin Stoddart
 CSE 163 AA
 
-Write about final project bluh bluh bluh
+Write about final project bluh bluh bluh bluh
 """
 
 # Our imports
