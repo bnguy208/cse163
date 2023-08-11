@@ -5,11 +5,9 @@ CSE 163 AA
 Write about final project bluh bluh bluh bluh
 """
 
-# Our imports
 import plotly.express as px
 import geopandas as gpd
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 
 
@@ -37,8 +35,10 @@ def merge_geo(shp_file_name: str, xlsx_file: None | pd.ExcelFile = None, csv_fil
   return merged_data
 
 
-# (1) How has the number of drug overdose cases changed between 2015 and 2023 in Washington State?
-def drug_overdose_change(data: gpd.GeoDataFrame, start = 2015.0, end = 2023.0) -> None:
+# (1) How has the number of drug overdose cases changed between 2015 and 2023
+# in Washington State?
+def drug_overdose_change(data: gpd.GeoDataFrame, start=2015.0,
+                         end=2023.0) -> None:
   """
   This function takes in the geospatial dataframe and returns the number
   of drug overdose cases from 2015-2023.
@@ -52,14 +52,16 @@ def drug_overdose_change(data: gpd.GeoDataFrame, start = 2015.0, end = 2023.0) -
   county_data = data[drug & county & time & year & remove_star]
   county_data['Death Count'] = county_data['Death Count'].astype('int')
   county_data = county_data.dissolve(by='Year', aggfunc='sum').reset_index()
-  fig = px.line(county_data, x="Year", y="Death Count", title=f"Drug Overdose Deaths in WA between {int(start)} and {int(end)}", markers=True)
+  fig = px.line(county_data, x="Year", y="Death Count",
+                title=f"Drug Overdose Deaths in WA between {int(start)} and {int(end)}", markers=True)
   fig.update_layout(title_x=0.5, title_y=0.95,  font=dict(size=20))
   fig.update_traces(line=dict(width=4), marker=dict(size=10))
 
   fig.show()
 
 
-  #  (2) Which counties in Washington state have the highest number/rate of drug overdose cases?
+#  (2) Which counties in Washington state have the highest number/rate
+#  of drug overdose cases?
 def overdose_deaths_counties(data: gpd.GeoDataFrame, drug_name = 'Any Drug', year_date = 2022.0) -> None:
   """
   This function takes in the geospatial dataframe and returns the counties
@@ -72,7 +74,7 @@ def overdose_deaths_counties(data: gpd.GeoDataFrame, drug_name = 'Any Drug', yea
   time = (data['Time Aggregation'] == '1 year rolling counts')
   remove_star = data['Death Count'] != '*'
   county_data = data[drug & county & time & year & remove_star]
-  #county_data = county_data[['Location', 'geometry', 'Death Count', 'Time Aggregation', 'Year']]
+  # county_data = county_data[['Location', 'geometry', 'Death Count', 'Time Aggregation', 'Year']]
   county_data['Death Count'] = county_data['Death Count'].astype('int')
 
   fig, ax = plt.subplots(1)
@@ -82,16 +84,13 @@ def overdose_deaths_counties(data: gpd.GeoDataFrame, drug_name = 'Any Drug', yea
   plt.savefig('county_population_map.png')
 
 
-# This is a xlsx file with WA overdose, you can change second parameter to change WS
-xlsx_file = extract_xlsx('/content/Data/OverdoseDeathWA.xlsx', 'By Location and Date')
-# This is a merged file with WA overdoses and geo
-wa_geo_data = merge_geo('/content/Data/geodata/cb_2022_us_county_500k.shp', xlsx_file)
 # This is data with national deaths/overdoses  with geo
-national_geo_data = merge_geo('/content/Data/geodata/cb_2022_us_county_500k.shp', csv_file_name = '/content/Data/NationalOverdose.csv')
+national_geo_data = merge_geo('/content/Data/geodata/cb_2022_us_county_500k.shp',
+                              csv_file_name='/content/Data/NationalOverdose.csv')
 
 
-# (3) How does the number of overdoses in WA compare to number of overdoses in other 
-# states in the USA?
+# (3) How does the number of overdoses in WA compare to number of overdoses in
+# other states in the USA?
 
 # Create bar graph
 
@@ -100,10 +99,17 @@ national_geo_data = merge_geo('/content/Data/geodata/cb_2022_us_county_500k.shp'
 # Normalize national case count by dividing by total national pop
 
 
-# (4) What is the most prevalent drug that has been associated with drug overdose, and how has it 
-# changed over time?
+# (4) What is the most prevalent drug that has been associated with drug
+# overdose, and how has it changed over time?
 
 
-drug_overdose_change(wa_geo_data)
+def main():
+  xlsx_file = extract_xlsx('/Data/OverdoseDeathWA.xlsx', 'By Location and Date')
+  wa_geo_data = merge_geo('/content/Data/geodata/cb_2022_us_county_500k.shp', xlsx_file)
+  national_geo_data = merge_geo('/content/Data/geodata/cb_2022_us_county_500k.shp',
+                                csv_file_name='/content/Data/NationalOverdose.csv')
+  drug_overdose_change(wa_geo_data)
+  overdose_deaths_counties(wa_geo_data)
 
-overdose_deaths_counties(wa_geo_data)
+if __name__ == "__main__":
+  main()
