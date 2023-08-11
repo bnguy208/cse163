@@ -67,21 +67,6 @@ def drug_overdose_change(data, start=2015.0, end=2023.0) -> None:
     county_data = county_data.dissolve(by="Year", aggfunc="sum").reset_index()
     '''
 
-    county_data = overdose_geo(data, start, end)
-
-    fig = px.line(
-        county_data,
-        x="Year",
-        y="Death Count",
-        title=f"Drug Overdose Deaths in WA between \
-            {int(start)} and {int(end)}",
-        markers=True,
-    )
-    fig.update_layout(title_x=0.5, title_y=0.95, font=dict(size=20))
-    fig.update_traces(line=dict(width=4), marker=dict(size=10))
-
-    fig.show()
-
 
 def overdose_geo(data, start=2015.0, end=2023.0) -> pd.DataFrame:
     wa_data = data[data["STATE_NAME"] == "Washington"].copy()
@@ -96,7 +81,19 @@ def overdose_geo(data, start=2015.0, end=2023.0) -> pd.DataFrame:
     county_data = \
         county_data.groupby("Year").agg({"Death Count": "sum"}).reset_index()
 
-    return county_data
+    fig = px.line(
+        county_data,
+        x="Year",
+        y="Death Count",
+        title=f"Drug Overdose Deaths in WA between \
+            {int(start)} and {int(end)}",
+        markers=True
+    )
+    fig.update_layout(title_x=0.5, title_y=0.95, font=dict(size=20))
+    fig.update_traces(line=dict(width=4), marker=dict(size=10))
+
+    # fig.show()
+    fig.write_image('wa_overdose.png')
 
 
 def overdose_df(geo_data: gpd.GeoDataFrame) -> pd.DataFrame:
@@ -159,8 +156,8 @@ def main():
         csv_file_name="Data/NationalOverdose.csv",
     )
     '''
-    drug_overdose_change(wa_geo_data)
-    # print(overdose_df(overdose_geo(wa_geo_data)))
+    # drug_overdose_change(wa_geo_data)
+    overdose_geo(wa_geo_data)
     # verdose_deaths_counties(wa_geo_data)
 
 
