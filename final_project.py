@@ -84,11 +84,6 @@ def overdose_deaths_counties(data, drug_name = 'Any Drug', year_date = 2022.0):
   plt.savefig('county_population_map.png')
 
 
-# This is data with national deaths/overdoses  with geo
-national_geo_data = merge_geo('/content/Data/geodata/cb_2022_us_county_500k.shp',
-                              csv_file_name='/content/Data/NationalOverdose.csv')
-
-
 # (3) How does the number of overdoses in WA compare to number of overdoses in
 # other states in the USA?
 
@@ -104,10 +99,10 @@ national_geo_data = merge_geo('/content/Data/geodata/cb_2022_us_county_500k.shp'
 
 
 def main():
-  xlsx_file = extract_xlsx('/Data/OverdoseDeathWA.xlsx', 'By Location and Date')
-  wa_geo_data = merge_geo('/content/Data/geodata/cb_2022_us_county_500k.shp', xlsx_file)
-  national_geo_data = merge_geo('/content/Data/geodata/cb_2022_us_county_500k.shp',
-                                csv_file_name='/content/Data/NationalOverdose.csv')
+  xlsx_file = extract_xlsx('Data/OverdoseDeathWA.xlsx', 'By Location and Date')
+  wa_geo_data = merge_geo('Data/geodata/cb_2022_us_county_500k.shp', xlsx_file)
+  national_geo_data = merge_geo('Data/geodata/cb_2022_us_county_500k.shp',
+                                csv_file_name='Data/NationalOverdose.csv')
   drug_overdose_change(wa_geo_data)
   overdose_deaths_counties(wa_geo_data)
 
