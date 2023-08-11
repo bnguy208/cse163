@@ -48,6 +48,10 @@ def drug_overdose_change(data, start=2015.0, end=2023.0) -> None:
     This function takes in the geospatial dataframe and returns the number
     of drug overdose cases from 2015-2023.
     """
+
+    # This chunk below is replaced by the overdose_geo() call but I'm too
+    # scared to delete it yet
+    '''
     data = data[data["STATE_NAME"] == "Washington"]
     drug = data["Drug Category"] == "Any Drug"
     county = data["Geography"] == "County"
@@ -57,6 +61,10 @@ def drug_overdose_change(data, start=2015.0, end=2023.0) -> None:
     county_data = data[drug & county & time & year & remove_star]
     county_data["Death Count"] = county_data["Death Count"].astype("int")
     county_data = county_data.dissolve(by="Year", aggfunc="sum").reset_index()
+    '''
+
+    county_data = overdose_geo(data, start, end)
+
     fig = px.line(
         county_data,
         x="Year",
@@ -69,6 +77,28 @@ def drug_overdose_change(data, start=2015.0, end=2023.0) -> None:
     fig.update_traces(line=dict(width=4), marker=dict(size=10))
 
     fig.show()
+
+
+def overdose_geo(data, start=2015.0, end=2023.0) -> pd.DataFrame:
+    data = data[data["STATE_NAME"] == "Washington"]
+    drug = data["Drug Category"] == "Any Drug"
+    county = data["Geography"] == "County"
+    year = (data["Year"] >= (start - 1)) & (data["Year"] <= (end + 1))
+    time = data["Time Aggregation"] == "1 year rolling counts"
+    remove_star = data["Death Count"] != "*"
+    county_data = data[drug & county & time & year & remove_star]
+    county_data["Death Count"] = county_data["Death Count"].astype("int")
+    county_data = county_data.dissolve(by="Year", aggfunc="sum").reset_index()
+
+    return county_data
+
+
+def overdose_df(geo_data: gpd.GeoDataFrame) -> pd.DataFrame:
+    county_data_pd = pd.DataFrame(geo_data.drop(columns='geometry'))
+    county_data_pd = county_data_pd.drop(columns='ALAND')
+    county_data_pd = county_data_pd.drop(columns='AWATER')
+
+    return county_data_pd
 
 
 #  (2) Which counties in Washington state have the highest number/rate
@@ -115,7 +145,7 @@ def main():
                              "By Location and Date")
     wa_geo_data = merge_geo("Data/geodata/cb_2022_us_county_500k.shp",
                             xlsx_file)
-  
+
     # Commented bc flake 8 didn't like that it wasn't used yet
     '''
     national_geo_data = merge_geo(
@@ -124,7 +154,8 @@ def main():
     )
     '''
     drug_overdose_change(wa_geo_data)
-    overdose_deaths_counties(wa_geo_data)
+    # print(overdose_df(overdose_geo(wa_geo_data)))
+    # verdose_deaths_counties(wa_geo_data)
 
 
 if __name__ == "__main__":
