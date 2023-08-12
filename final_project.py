@@ -131,16 +131,32 @@ def overdose_deaths_counties(data, drug_name="Any Drug", year_date=2022.0):
 
 # (3) How does the number of overdoses in WA compare to number of overdoses in
 # other states in the USA?
+def wa_versus_us(usa_data):
+    usa_data = usa_data[['State', 'Year', 'Month', 'Period', 'Indicator', 'Data Value']].copy()
+    usa_data['Year'] = usa_data['Year'].astype(str)
+    any_drug = (usa_data['Indicator'] == 'Number of Drug Overdose Deaths')
 
-# Create bar graph with drug overdose deaths in United States every month in
-# years 2019 and 2020
+    # Create masks
+    year = (usa_data['Year'] == '2019') | (usa_data['Year'] == '2020')
+    month = (usa_data['Month'] == 'March')
+    states = (usa_data['State'] == 'WA') | (usa_data['State'] == 'US')
 
-# Create maps of overdose deaths in months with highest number of deaths
-# in the year 2019 and 2020
+    # Filter data
+    usa_data = usa_data[any_drug & year & month & states]
+    usa_data
+
+    fig = px.bar(usa_data, x='Year', y='Data Value', color='State', 
+                 title='Drug Overdose Deaths in Washington vs. U.S.')
+    fig.update_layout(barmode='stack')
+    fig.update_yaxes(type='log')
+    fig.update_yaxes(title="Death Count") # Stacked bar chart needs fixing
+    # fig.write_image('wa_versus_us.png')
 
 
 # (4) What is the most prevalent drug that has been associated with drug
 # overdose, and how has it changed over time?
+def most_prevalent_drug(usa_data):
+    pass
 
 
 def main():
@@ -150,15 +166,17 @@ def main():
                             xlsx_file)
 
     # Commented bc flake 8 didn't like that it wasn't used yet
-    '''
+    
     national_geo_data = merge_geo(
         "Data/geodata/cb_2022_us_county_500k.shp",
         csv_file_name="Data/NationalOverdose.csv",
     )
-    '''
+    
     # drug_overdose_change(wa_geo_data)
     overdose_geo(wa_geo_data)
     # verdose_deaths_counties(wa_geo_data)
+    wa_versus_us(national_geo_data)
+    most_prevalent_drug(national_geo_data)
 
 
 if __name__ == "__main__":
