@@ -26,7 +26,7 @@ def extract_xlsx(xlsx_name, ws_name):
 
 def merge_geo(shp_file_name, xlsx_file=None, csv_file_name=None):
     """
-    This function takes the name of the shapes file and Excel workbook file
+    This function takes the name of the shapes file and Excel workbook file OR a CSV file
     and returns a geospatial dataframe that joins these two datasets by state.
     """
     shp_file = gpd.read_file(shp_file_name)
@@ -36,10 +36,8 @@ def merge_geo(shp_file_name, xlsx_file=None, csv_file_name=None):
             (csv_file["State Name"] != "Alaska") &
             (csv_file["State Name"] != "Hawaii")
         ]
-        merged_data = shp_file.merge(
-            data = shp_file.merge(csv_file, left_on='STUSPS',
-                                  right_on='State', how='outer')
-        )
+        merged_data = shp_file.merge(csv_file, left_on='STUSPS',
+                                     right_on='State', how='outer')
     else:
         merged_data = shp_file.merge(xlsx_file, left_on="NAMELSAD",
                                      right_on="Location")
@@ -68,9 +66,16 @@ def drug_overdose_change(data, start=2015.0, end=2023.0) -> None:
     county_data = county_data.dissolve(by="Year", aggfunc="sum").reset_index()
     '''
 
+
 #  (2) Which counties in Washington state have the highest number/rate
 #  of drug overdose cases?
-def overdose_deaths_counties(data: gpd.GeoDataFrame, drug_name = 'Any Drug', year_start = 2016.0, year_end = 2022.0) -> None:
+def overdose_deaths_counties(data: gpd.GeoDataFrame, drug_name='Any Drug',
+                             year_start=2016.0, year_end=2022.0) -> None:
+   
+    """
+    This function takes in the geospatial dataframe and returns the counties
+    in Washington that have the highest number of drug overdose cases.
+    """
     data = data[data['STATE_NAME'] == 'Washington'].copy()
     drug = data['Drug Category'] == drug_name
     county = data['Geography'] == 'County'
@@ -88,14 +93,13 @@ def overdose_deaths_counties(data: gpd.GeoDataFrame, drug_name = 'Any Drug', yea
         year = (county_data['Year'] == i)
         year_data = county_data[year]
 
-        ax = plt.subplot(height, width, i - int(year_start) + 1)
+        ax = plt.subplot(height, width, i - int(year_start)+1)
 
         data.plot(ax=ax, color='#d3d3d3')
         year_data.plot(ax=ax, column='Death Count', legend=True)
         ax.set_title(i)
         ax.set_aspect('equal')
-    plt.show()
-
+    plt.savefig('counties_overdose.png')
 
 
 def overdose_geo(data, start=2016.0, end=2022.0) -> pd.DataFrame:
@@ -134,40 +138,6 @@ def overdose_df(geo_data: gpd.GeoDataFrame) -> pd.DataFrame:
     return county_data_pd
 
 
-#  (2) Which counties in Washington state have the highest number/rate
-#  of drug overdose cases?
-def overdose_deaths_counties(data: gpd.GeoDataFrame, drug_name='Any Drug',
-                             year_start=2016.0, year_end=2022.0) -> None:
-   
-    """
-    This function takes in the geospatial dataframe and returns the counties
-    in Washington that have the highest number of drug overdose cases.
-    """
-    data = data[data['STATE_NAME'] == 'Washington']
-    drug = data['Drug Category'] == drug_name
-    county = data['Geography'] == 'County'
-    time = (data['Time Aggregation'] == '1 year rolling counts')
-    remove_star = data['Death Count'] != '*'
-    county_data = data[drug & county & time & remove_star]
-    county_data['Death Count'] = county_data['Death Count'].astype('int')
-
-    plt.figure(figsize=(15, 12))
-    plt.subplots_adjust(hspace=0.2)
-    plt.suptitle("Washington County Overdose Deaths", fontsize=18, y=0.95)
-    n = int(year_end - year_start)
-    height, width = n // 2 + 1, 2
-    for i in range(int(year_start), int(year_end)+1):
-        year = (county_data['Year'] == i)
-        year_data = county_data[year]
-
-        ax = plt.subplot(height, width, i - int(year_start)+1)
-
-        data.plot(ax=ax, color='#d3d3d3')
-        year_data.plot(ax=ax, column='Death Count', legend=True)
-        ax.set_title(i)
-        ax.set_aspect('equal')
-    plt.savefig('counties_overdose.png')
-
 
 # (3) How does the number of overdoses in WA compare to number of overdoses in
 # other states in the USA? - Brandon
@@ -179,13 +149,13 @@ def wa_versus_us(usa_data):
     # Create masks
     year = (usa_data['Year'] == '2019') | (usa_data['Year'] == '2020')
     month = (usa_data['Month'] == 'March')
-    states = (usa_data['State'] == 'WA') | (usa_data['State'] == 'US')
+    states = (usa_data['State'] == 'WA') | (usa_data['State'] == 'US') # State US?
 
     # Filter data
     usa_data = usa_data[any_drug & year & month & states]
     usa_data
 
-    fig = px.bar(usa_data, x='Year', y='Data Value', color='State', 
+    fig = px.bar(usa_data, x='Year', y='Data Value', color='State',
                  title='Drug Overdose Deaths in Washington vs. U.S.')
     fig.update_layout(barmode='stack')
     fig.update_yaxes(type='log')
@@ -208,12 +178,11 @@ def main():
         "Data/geodata/cb_2022_us_county_500k.shp",
         csv_file_name="Data/NationalOverdose.csv",
     )
-    
     # drug_overdose_change(wa_geo_data)
     overdose_geo(wa_geo_data)
-    # verdose_deaths_counties(wa_geo_data)
+    overdose_deaths_counties(wa_geo_data)
     wa_versus_us(national_geo_data)
-    most_prevalent_drug(national_geo_data)
+    #most_prevalent_drug(national_geo_data)
 
 
 if __name__ == "__main__":
