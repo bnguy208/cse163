@@ -13,6 +13,7 @@ import plotly.express as px
 import geopandas as gpd
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize
 
 
 def extract_xlsx(xlsx_name, ws_name):
@@ -110,7 +111,7 @@ def overdose_deaths_counties(data: gpd.GeoDataFrame, drug_name='Any Drug',
         year_data.plot(ax=ax, column='Death Count', legend=True)
         ax.set_title(i)
         ax.set_aspect('equal')
-    plt.savefig('counties_overdose.png')
+    plt.savefig('counties_overdose.png')  # Could we normalize the color bars?
 
 
 def overdose_df(geo_data: gpd.GeoDataFrame) -> pd.DataFrame:
@@ -123,27 +124,30 @@ def overdose_df(geo_data: gpd.GeoDataFrame) -> pd.DataFrame:
 
 # (3) How does the number of overdoses in WA compare to number of overdoses in
 # other states in the USA? - Brandon
-def wa_versus_us(usa_data):
-    usa_data = usa_data[['State', 'Year', 'Month', 'Period', 'Indicator', 
-                         'Data Value']].copy()
+def wa_versus_us(national_geo_data):
+    """
+    This function takes in the national drug overdose dataset and plots
+    the number of drug overdose deaths across the U.S. in 2022.
+    """
+    usa_data = national_geo_data[['State', 'Year', 'Month', 'Period', 'Indicator', 'Data Value', 'geometry']].copy()
     usa_data['Year'] = usa_data['Year'].astype(str)
-    any_drug = (usa_data['Indicator'] == 'Number of Drug Overdose Deaths')
 
     # Create masks
-    year = (usa_data['Year'] == '2019') | (usa_data['Year'] == '2020')
-    month = (usa_data['Month'] == 'March')
-    states = (usa_data['State'] == 'WA') | (usa_data['State'] == 'US')
+    any_drug = (usa_data['Indicator'] == 'Number of Drug Overdose Deaths')
+    year = (usa_data['Year'] == '2022.0')
+    month = (usa_data['Month'] == 'December')
+    states = (usa_data['State'] != 'AK') | (usa_data['State'] != 'HI') | (usa_data['State'] != 'YC') | (usa_data['State'] != 'US')
 
     # Filter data
     usa_data = usa_data[any_drug & year & month & states]
     usa_data
 
-    fig = px.bar(usa_data, x='Year', y='Data Value', color='State',
-                 title='Drug Overdose Deaths in Washington vs. U.S.')
-    fig.update_layout(barmode='stack')
-    fig.update_yaxes(type='log')
-    fig.update_yaxes(title="Death Count")  # Stacked bar chart needs fixing
-    # fig.write_image('wa_versus_us.png')
+    # Plot data
+    fig, ax = plt.subplots(1)
+    national_geo_data.plot(ax=ax, color='#EEEEEE')
+    usa_data.plot(ax=ax, column='Data Value', legend=True)
+    plt.title('National Drug Overdose Deaths from January to December 2022')
+    plt.savefig('wa_versus_us.png')
 
 
 # (4) How does race impact overdose deaths in Washington? - Karin
