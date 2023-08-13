@@ -84,8 +84,8 @@ def wa_overdose_change(data, start=2016.0, end=2022.0) -> pd.DataFrame:
 def overdose_deaths_counties(data: gpd.GeoDataFrame, drug_name='Any Drug',
                              year_start=2016.0, year_end=2022.0) -> None:
     """
-    This function takes in the geospatial dataframe and returns the counties
-    in Washington that have the highest number of drug overdose cases.
+    This function takes in the geospatial dataframe and plots the drug
+    overdose cases in different counties in Washington.
     """
     data = data[data['STATE_NAME'] == 'Washington'].copy()
     drug = data['Drug Category'] == drug_name
