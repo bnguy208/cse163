@@ -138,18 +138,18 @@ def wa_versus_us(national_geo_data):
     This function takes in the national drug overdose dataset and plots
     the number of drug overdose deaths across the U.S. in 2022.
     """
-    usa_data = national_geo_data[['State', 'Year', 'Month', 'Period', 'Indicator', 'Data Value', 'geometry']].copy()
+    usa_data = national_geo_data[['State', 'Year', 'Month', 'Period',
+                                  'Indicator', 'Data Value', 'geometry']].copy()
     usa_data['Year'] = usa_data['Year'].astype(str)
 
     # Create masks
     any_drug = (usa_data['Indicator'] == 'Number of Drug Overdose Deaths')
-    year = (usa_data['Year'] == '2022.0')
+    year = (usa_data['Year'] == '2022')
     month = (usa_data['Month'] == 'December')
-    states = (usa_data['State'] != 'AK') | (usa_data['State'] != 'HI') | (usa_data['State'] != 'YC') | (usa_data['State'] != 'US')
+    states = (usa_data['State'] != 'AK') & (usa_data['State'] != 'HI') & (usa_data['State'] != 'YC') & (usa_data['State'] != 'US')
 
     # Filter data
     usa_data = usa_data[any_drug & year & month & states]
-    usa_data
 
     # Plot data
     fig, ax = plt.subplots(1)
