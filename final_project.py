@@ -32,6 +32,15 @@ def merge_geo(shp_file_name, xlsx_file=None, csv_file_name=None):
     by state.
     """
     shp_file = gpd.read_file(shp_file_name)
+    is_mainland = (shp_file['STUSPS'] != 'AK') & \
+                  (shp_file['STUSPS'] != 'HI') & \
+                  (shp_file['STUSPS'] != 'GU') & \
+                  (shp_file['STUSPS'] != 'PR') & \
+                  (shp_file['STUSPS'] != 'MP') & \
+                  (shp_file['STUSPS'] != 'AS') & \
+                  (shp_file['STUSPS'] != 'VI')
+    shp_file = shp_file[is_mainland]
+
     if xlsx_file is None:
         csv_file = pd.read_csv(csv_file_name)
         csv_file = csv_file[
