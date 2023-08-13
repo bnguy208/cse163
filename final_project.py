@@ -71,7 +71,6 @@ def drug_overdose_change(data, start=2015.0, end=2023.0) -> None:
 #  of drug overdose cases?
 def overdose_deaths_counties(data: gpd.GeoDataFrame, drug_name='Any Drug',
                              year_start=2016.0, year_end=2022.0) -> None:
-   
     """
     This function takes in the geospatial dataframe and returns the counties
     in Washington that have the highest number of drug overdose cases.
@@ -138,7 +137,6 @@ def overdose_df(geo_data: gpd.GeoDataFrame) -> pd.DataFrame:
     return county_data_pd
 
 
-
 # (3) How does the number of overdoses in WA compare to number of overdoses in
 # other states in the USA? - Brandon
 def wa_versus_us(usa_data):
@@ -159,7 +157,7 @@ def wa_versus_us(usa_data):
                  title='Drug Overdose Deaths in Washington vs. U.S.')
     fig.update_layout(barmode='stack')
     fig.update_yaxes(type='log')
-    fig.update_yaxes(title="Death Count") # Stacked bar chart needs fixing
+    fig.update_yaxes(title="Death Count")  # Stacked bar chart needs fixing
     # fig.write_image('wa_versus_us.png')
 
 
@@ -171,9 +169,6 @@ def main():
                              "By Location and Date")
     wa_geo_data = merge_geo("Data/geodata/cb_2022_us_county_500k.shp",
                             xlsx_file)
-
-    # Commented bc flake 8 didn't like that it wasn't used yet
-    
     national_geo_data = merge_geo(
         "Data/geodata/cb_2022_us_county_500k.shp",
         csv_file_name="Data/NationalOverdose.csv",
@@ -182,7 +177,7 @@ def main():
     overdose_geo(wa_geo_data)
     overdose_deaths_counties(wa_geo_data)
     wa_versus_us(national_geo_data)
-    #most_prevalent_drug(national_geo_data)
+    # most_prevalent_drug(national_geo_data)
 
 
 if __name__ == "__main__":
