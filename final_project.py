@@ -138,24 +138,38 @@ def wa_versus_us(national_geo_data):
     This function takes in the national drug overdose dataset and plots
     the number of drug overdose deaths across the U.S. in 2022.
     """
+    shp_file = gpd.read_file('Data/geodata/cb_2022_us_county_500k.shp')
+    is_mainland = (shp_file['STUSPS'] != 'AK') & \
+                  (shp_file['STUSPS'] != 'HI') & \
+                  (shp_file['STUSPS'] != 'GU') & \
+                  (shp_file['STUSPS'] != 'PR') & \
+                  (shp_file['STUSPS'] != 'MP') & \
+                  (shp_file['STUSPS'] != 'AS') & \
+                  (shp_file['STUSPS'] != 'VI')
+    shp_file = shp_file[is_mainland]
+
     usa_data = national_geo_data[['State', 'Year', 'Month', 'Period',
-                                  'Indicator', 'Data Value', 'geometry']].copy()
+                                  'Indicator', 'Data Value',
+                                  'geometry']].copy()
     usa_data['Year'] = usa_data['Year'].astype(str)
+    usa_data['Data Value'] = usa_data['Data Value'].str.replace(',', '')
+    usa_data['Data Value'] = usa_data['Data Value'].fillna('0').astype(float)
 
     # Create masks
     any_drug = (usa_data['Indicator'] == 'Number of Drug Overdose Deaths')
     year = (usa_data['Year'] == '2022')
     month = (usa_data['Month'] == 'December')
-    states = (usa_data['State'] != 'AK') & (usa_data['State'] != 'HI') & (usa_data['State'] != 'YC') & (usa_data['State'] != 'US')
+    states = (usa_data['State'] != 'AK') & (usa_data['State'] != 'HI') & \
+             (usa_data['State'] != 'YC') & (usa_data['State'] != 'US')
 
     # Filter data
     usa_data = usa_data[any_drug & year & month & states]
 
     # Plot data
-    fig, ax = plt.subplots(1)
-    national_geo_data.plot(ax=ax, color='#EEEEEE')
+    fig, ax = plt.subplots(1, figsize=(15, 7))
+    shp_file.plot(ax=ax, color='#EEEEEE')
     usa_data.plot(ax=ax, column='Data Value', legend=True)
-    plt.title('National Drug Overdose Deaths from January to December 2022')
+    plt.title('National Drug Overdose Deaths in 2022')
     plt.savefig('wa_versus_us.png')
 
 
