@@ -135,6 +135,7 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     """
     # Why are you reading this file? this file is already merged in national_geo_data
     # Can you just save natioanl_geo_data so that you can use it later unchanged for the plotting?
+    # Anyway I tried to rewrite but it didn't work so maybe it is the only way idkkkkk 
     shp_file = gpd.read_file('cse163/Data/geodata/cb_2022_us_county_500k.shp')
     is_mainland = (shp_file['STUSPS'] != 'AK') & \
                   (shp_file['STUSPS'] != 'HI') & \
