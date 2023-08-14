@@ -169,7 +169,7 @@ def wa_versus_us(national_geo_data):
     fig, ax = plt.subplots(1, figsize=(15, 7))
     shp_file.plot(ax=ax, color='#EEEEEE')
     usa_data.plot(ax=ax, column='Data Value', legend=True)
-    plt.title('National Drug Overdose Deaths in 2022')
+    plt.title('National Drug Overdose Deaths in 2022', fontsize=16)
     plt.savefig('wa_versus_us.png')
 
 
