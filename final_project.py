@@ -13,10 +13,9 @@ import plotly.express as px
 import geopandas as gpd
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.colors import Normalize
 
 
-def extract_xlsx(xlsx_name, ws_name):
+def extract_xlsx(xlsx_name: str, ws_name: str) -> pd.ExcelFile:
     """
     This function takes the path of a multi-sheet Excel workbook file and the
     name of the workshee of interest and returns a Pandas dataframe.
@@ -25,7 +24,8 @@ def extract_xlsx(xlsx_name, ws_name):
     return pd.read_excel(xlsx, ws_name)
 
 
-def merge_geo(shp_file_name, xlsx_file=None, csv_file_name=None):
+def merge_geo(shp_file_name: str, xlsx_file: None | pd.ExcelFile = None,
+              csv_file_name: None | str = None) -> gpd.GeoDataFrame:
     """
     This function takes the name of the shapes file and Excel workbook file OR
     a CSV file and returns a geospatial dataframe that joins these two datasets
@@ -55,17 +55,19 @@ def merge_geo(shp_file_name, xlsx_file=None, csv_file_name=None):
     return merged_data
 
 
-# (1) How has the number of drug overdose cases changed between 2015 and 2023
+# (1) How has the number of drug overdose cases changed between 2016 and 2023
 # in Washington State?
-def wa_overdose_change(data, start=2016.0, end=2022.0) -> pd.DataFrame:
+def wa_overdose_change(wa_geo_data: gpd.GeoDataFrame,
+                       start: float = 2016.0,
+                       end: float = 2022.0) -> None:
     """
     This function takes in the geospatial dataframe and returns the number
     of drug overdose cases in Washington from 2016-2023.
     """
-    wa_data = data[data["STATE_NAME"] == "Washington"].copy()
+    wa_data = wa_geo_data[wa_geo_data["STATE_NAME"] == "Washington"].copy()
     drug = wa_data["Drug Category"] == "Any Drug"
     county = wa_data["Geography"] == "County"
-    wa_data["Year"] = pd.to_numeric(data["Year"], errors="coerce")
+    wa_data["Year"] = pd.to_numeric(wa_geo_data["Year"], errors="coerce")
     year = (wa_data["Year"] >= start) & (wa_data["Year"] <= end)
     time = wa_data["Time Aggregation"] == "1 year rolling counts"
     remove_star = wa_data["Death Count"] != "*"
@@ -133,7 +135,7 @@ def overdose_df(geo_data: gpd.GeoDataFrame) -> pd.DataFrame:
 
 # (3) How does the number of overdoses in WA compare to number of overdoses in
 # other states in the USA? - Brandon
-def wa_versus_us(national_geo_data):
+def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     """
     This function takes in the national drug overdose dataset and plots
     the number of drug overdose deaths across the U.S. in 2022.
