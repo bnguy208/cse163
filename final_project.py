@@ -43,12 +43,8 @@ def merge_geo(shp_file_name: str, xlsx_file: None | pd.ExcelFile = None,
 
     if xlsx_file is None:
         csv_file = pd.read_csv(csv_file_name)
-        csv_file = csv_file[
-            (csv_file["State Name"] != "Alaska") &
-            (csv_file["State Name"] != "Hawaii")
-        ]
         merged_data = shp_file.merge(csv_file, left_on='STUSPS',
-                                     right_on='State', how='outer')
+                                     right_on='State')
     else:
         merged_data = shp_file.merge(xlsx_file, left_on="NAMELSAD",
                                      right_on="Location")
@@ -57,21 +53,18 @@ def merge_geo(shp_file_name: str, xlsx_file: None | pd.ExcelFile = None,
 
 # (1) How has the number of drug overdose cases changed between 2016 and 2023
 # in Washington State?
-def wa_overdose_change(wa_geo_data: gpd.GeoDataFrame,
+def wa_overdose_change(wa_data:  pd.ExcelFile,
                        start: float = 2016.0,
                        end: float = 2022.0) -> None:
     """
     This function takes in the geospatial dataframe and returns the number
     of drug overdose cases in Washington from 2016-2023.
     """
-    wa_data = wa_geo_data[wa_geo_data["STATE_NAME"] == "Washington"].copy()
     drug = wa_data["Drug Category"] == "Any Drug"
-    county = wa_data["Geography"] == "County"
-    wa_data["Year"] = pd.to_numeric(wa_geo_data["Year"], errors="coerce")
     year = (wa_data["Year"] >= start) & (wa_data["Year"] <= end)
     time = wa_data["Time Aggregation"] == "1 year rolling counts"
     remove_star = wa_data["Death Count"] != "*"
-    county_data = wa_data[drug & county & time & year & remove_star].copy()
+    county_data = wa_data[drug & time & year & remove_star].copy()
     county_data["Death Count"] = county_data["Death Count"].astype("int")
     county_data = \
         county_data.groupby("Year").agg({"Death Count": "sum"}).reset_index()
@@ -140,7 +133,10 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     This function takes in the national drug overdose dataset and plots
     the number of drug overdose deaths across the U.S. in 2022.
     """
-    shp_file = gpd.read_file('Data/geodata/cb_2022_us_county_500k.shp')
+    # Why are you reading this file? this file is already merged in national_geo_data
+    # Can you just save natioanl_geo_data so that you can use it later unchanged for the plotting?
+    # Anyway I tried to rewrite but it didn't work so maybe it is the only way idkkkkk 
+    shp_file = gpd.read_file('cse163/Data/geodata/cb_2022_us_county_500k.shp')
     is_mainland = (shp_file['STUSPS'] != 'AK') & \
                   (shp_file['STUSPS'] != 'HI') & \
                   (shp_file['STUSPS'] != 'GU') & \
@@ -180,16 +176,16 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
 
 def main():
     # Loading in the overdose data
-    xlsx_file = extract_xlsx("Data/OverdoseDeathWA.xlsx",
+    xlsx_file = extract_xlsx("cse163/Data/OverdoseDeathWA.xlsx",
                              "By Location and Date")
-    wa_geo_data = merge_geo("Data/geodata/cb_2022_us_county_500k.shp",
+    wa_geo_data = merge_geo("cse163/Data/geodata/cb_2022_us_county_500k.shp",
                             xlsx_file)
     national_geo_data = merge_geo(
-        "Data/geodata/cb_2022_us_county_500k.shp",
-        csv_file_name="Data/NationalOverdose.csv")
+        "cse163/Data/geodata/cb_2022_us_county_500k.shp",
+        csv_file_name="cse163/Data/NationalOverdose.csv")
 
     # Methods to answer research questions
-    wa_overdose_change(wa_geo_data)
+    wa_overdose_change(xlsx_file)
     overdose_deaths_counties(wa_geo_data)
     wa_versus_us(national_geo_data)
     # most_prevalent_drug(national_geo_data)
