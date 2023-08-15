@@ -99,6 +99,9 @@ def test_wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
 
 
 def test_race_death_wa(wa_race_data):
+    """
+    This function tests the race_death_wa method from question_4.py
+    """
     king_county = wa_race_data[['Year', 'Location', 'Drug Category', 'Race',
                                 'Time Aggregation', 'Death Count',
                                 'Population']].copy()
