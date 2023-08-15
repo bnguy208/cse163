@@ -16,17 +16,22 @@ from extract_and_merge import extract_xlsx, merge_geo
 
 #  (2) Which counties in Washington state have the highest number/rate
 #  of drug overdose cases?
-def overdose_deaths_counties(data: gpd.GeoDataFrame, drug_name='Any Drug',
+def overdose_deaths_counties(wa_geo_data: gpd.GeoDataFrame,
+                             drug_name='Any Drug',
                              year_start=2016.0, year_end=2022.0) -> None:
     """
     This function takes in the geospatial dataframe and plots the drug
     overdose cases in different counties in Washington.
     """
-    data = data[data['STATE_NAME'] == 'Washington'].copy()
+    data = wa_geo_data[wa_geo_data['STATE_NAME'] == 'Washington'].copy()
+
+    # Create masks
     drug = data['Drug Category'] == drug_name
     county = data['Geography'] == 'County'
     time = (data['Time Aggregation'] == '1 year rolling counts')
     remove_star = data['Death Count'] != '*'
+
+    # Filter dataframe
     county_data = data[drug & county & time & remove_star].copy()
     county_data['Death Count'] = county_data['Death Count'].astype('int')
 
