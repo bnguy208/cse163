@@ -3,10 +3,10 @@ Daria Gileva, Brandon Nguyen, Karin Stoddart
 CSE 163 AA
 
 This function is a part of the program that explores opioid overdose cases
-in the United States. It uses national drug overdose data and Washington drug overdose data.
-This method reads the WA drug overdose data and produces a line graph
-that allows us to answer questions about opioid overdose in WA state over a specified
-time period.
+in the United States. It uses national drug overdose data and Washington drug
+overdose data. This method reads the WA drug overdose data and produces a line
+graph that allows us to answer questions about opioid overdose in WA state over
+a specified time period.
 """
 
 import plotly.express as px

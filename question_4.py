@@ -37,62 +37,14 @@ def race_death_wa(wa_race_data: pd.DataFrame) -> None:
 
     # Plot
     plt.figure(figsize=(15, 7))
-    colors = ['lightsalmon', 'sandybrown', 'khaki', 'lightgreen', 'lightcyan', 'lavender']
+    colors = ['lightsalmon', 'sandybrown', 'khaki', 'lightgreen', 'lightcyan',
+              'lavender']
     plt.bar(king_county['Race'], king_county['Death per Capita'], color=colors)
     plt.xlabel('Race', fontsize=14)
     plt.ylabel('Death per Total Population', fontsize=14)
-    plt.title('Drug Overdose Deaths for All Drugs in King County (2022)', fontsize=18)
+    plt.title('Drug Overdose Deaths for All Drugs in King County (2022)',
+              fontsize=18)
     plt.savefig('wa_race_overdose.png')
-
-
-# def overdose_df(geo_data: gpd.GeoDataFrame) -> pd.DataFrame:
-#     county_data_pd = pd.DataFrame(geo_data.drop(columns='geometry'))
-#     county_data_pd = county_data_pd.drop(columns='ALAND')
-#     county_data_pd = county_data_pd.drop(columns='AWATER')
-
-#     return county_data_pd
-
-
-# def race_death_wa(data) -> None:
-#     wa_data = data[data["STATE_NAME"] == "Washington"].copy()
-#     drug = wa_data["Drug Category"] == "Any Drug"
-#     wa_data["Year"] = pd.to_numeric(data["Year"], errors="coerce")
-#     time = wa_data["Time Aggregation"] == "1 year rolling counts"
-#     remove_star = wa_data["Death Count"] != "*"
-#     county_data = wa_data[drug & time & remove_star].copy()
-#     county_data["Death Count"] = county_data["Death Count"].astype("int")
-
-#     # Some race names had * at the end so I took them out
-#     county_data['Race'] = county_data['Race'].apply(remove_race_asterisk)
-
-#     # Not sure how these categories are defined in the dataset
-#     # county_data = county_data[county_data['Race'] != 'Hispanic']
-#     # county_data = county_data[county_data['Race'] != 'Unknown']
-#     # county_data = county_data[county_data['Race'] != 'Multiple Races*']
-
-#     # absolute, bar height shows change in total overdose deaths
-#     # fig = px.histogram(county_data, x='Year', y='Death Count', color='Race', title="Change in Racial Makeup of Overdose Deaths in WA over 2016-2022")
-
-    
-#     # trying to have each bar be 100% but this doesn't make sense yet
-#     percent_data = county_data
-#     print(percent_data)
-#     grouped_year = percent_data.groupby('Year')['Death Count'].sum()
-#     print(grouped_year)
-#     # I know I'm doing the indexing wrong on this line but idk how to do it right:
-#     percent_data['Race Percent'] = (percent_data['Death Count'])/(grouped_year[percent_data['Year']])
-#     fig = px.histogram(percent_data, x='Year', y='Race Percent', color='Race Percent')
-    
-
-#     fig.update_layout(barmode='stack')
-#     fig.update_yaxes(type='log')
-#     fig.write_image('race_death_wa.png')
-
-
-# def remove_race_asterisk(s: str) -> str:
-#     if s[(len(s)-1):] == '*':
-#         s = s[:(len(s)-1)]
-#     return s
 
 
 def main():
