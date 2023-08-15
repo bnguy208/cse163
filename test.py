@@ -14,11 +14,12 @@ def test_wa_overdose_change(wa_data, start=2016.0, end=2022.0) -> pd.DataFrame:
     """
     This function tests the wa_overdose_change() method from question_1.py
     """
+    geography = wa_data["Geography"] == 'County'
     drug = wa_data["Drug Category"] == "Any Drug"
     year = (wa_data["Year"] >= start) & (wa_data["Year"] <= end)
     time = wa_data["Time Aggregation"] == "1 year rolling counts"
     remove_star = wa_data["Death Count"] != "*"
-    county_data = wa_data[drug & time & year & remove_star].copy()
+    county_data = wa_data[geography & drug & time & year & remove_star].copy()
     county_data["Death Count"] = county_data["Death Count"].astype("int")
     county_data = \
         county_data.groupby("Year").agg({"Death Count": "sum"}).reset_index()

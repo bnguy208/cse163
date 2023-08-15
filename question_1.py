@@ -21,11 +21,12 @@ def wa_overdose_change(wa_data:  pd.ExcelFile,
     This function takes in the geospatial dataframe and returns the number
     of drug overdose cases in Washington from 2016-2023.
     """
+    geography = wa_data["Geography"] == 'County'
     drug = wa_data["Drug Category"] == "Any Drug"
     year = (wa_data["Year"] >= start) & (wa_data["Year"] <= end)
     time = wa_data["Time Aggregation"] == "1 year rolling counts"
     remove_star = wa_data["Death Count"] != "*"
-    county_data = wa_data[drug & time & year & remove_star].copy()
+    county_data = wa_data[geography & drug & time & year & remove_star].copy()
     county_data["Death Count"] = county_data["Death Count"].astype("int")
     county_data = \
         county_data.groupby("Year").agg({"Death Count": "sum"}).reset_index()
