@@ -42,7 +42,7 @@ def race_death_wa(data) -> None:
     # county_data = county_data[county_data['Race'] != 'Multiple Races*']
 
     # absolute, bar height shows change in total overdose deaths
-    fig = px.histogram(county_data, x='Year', y='Death Count', color='Race')
+    fig = px.histogram(county_data, x='Year', y='Death Count', color='Race', title="Change in Racial Makeup of Overdose Deaths in WA over 2016-2022")
 
     '''
     # trying to have each bar be 100% but this doesn't make sense yet
