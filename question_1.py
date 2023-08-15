@@ -2,11 +2,11 @@
 Daria Gileva, Brandon Nguyen, Karin Stoddart
 CSE 163 AA
 
-This program explores opioid overdose cases in the United States. It uses
-national drug overdose data and Washington drug overdose data. The methods
-in this program read in these datasets and combine them with geospatial
-data to produce visualizations that allow us to answer questions about
-opioid overdose across the U.S. and within Washington.
+This function is a part of the program that explores opioid overdose cases
+in the United States. It uses national drug overdose data and Washington drug overdose data.
+This method reads the WA drug overdose data and produces a line graph
+that allows us to answer questions about opioid overdose in WA state over a specified
+time period.
 """
 
 import plotly.express as px
@@ -18,8 +18,11 @@ def wa_overdose_change(wa_data:  pd.ExcelFile,
                        start: float = 2016.0,
                        end: float = 2022.0) -> None:
     """
-    This function takes in the geospatial dataframe and returns the number
-    of drug overdose cases in Washington from 2016-2023.
+    This function takes in an excel dataframe and produces a line graph
+    that shows the number  of drug overdose cases in Washington
+    from 2016-2022.
+
+    The timeframe can be chagned by using default parameters. 
     """
     geography = wa_data["Geography"] == 'County'
     drug = wa_data["Drug Category"] == "Any Drug"
