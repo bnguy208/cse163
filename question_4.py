@@ -42,17 +42,18 @@ def race_death_wa(data) -> None:
     # county_data = county_data[county_data['Race'] != 'Multiple Races*']
 
     # absolute, bar height shows change in total overdose deaths
-    fig = px.histogram(county_data, x='Year', y='Death Count', color='Race', title="Change in Racial Makeup of Overdose Deaths in WA over 2016-2022")
+    # fig = px.histogram(county_data, x='Year', y='Death Count', color='Race', title="Change in Racial Makeup of Overdose Deaths in WA over 2016-2022")
 
-    '''
+    
     # trying to have each bar be 100% but this doesn't make sense yet
     percent_data = county_data
+    print(percent_data)
     grouped_year = percent_data.groupby('Year')['Death Count'].sum()
-    percent_data['Race Percent'] = (percent_data['Death Count'])
-    /(grouped_year[str(percent_data['Year'])])
-    fig = px.histogram(percent_data, x='Year', y='Race Percent',
-    color='Race Percent')
-    '''
+    print(grouped_year)
+    # I know I'm doing the indexing wrong on this line but idk how to do it right:
+    percent_data['Race Percent'] = (percent_data['Death Count'])/(grouped_year[percent_data['Year']])
+    fig = px.histogram(percent_data, x='Year', y='Race Percent', color='Race Percent')
+    
 
     fig.update_layout(barmode='stack')
     fig.update_yaxes(type='log')
