@@ -16,7 +16,7 @@ Overdose deaths are visualized geospatially using geospatial data from the Unite
     - Download shapefile by going to Cartographic Boundary by Geography, then Counties, and selecting the download option for 500,000 (national) to download the 11 MB file.
 
 ## Installations
-All visualizations were developed through VS Code using the Anaconda cse163 environment that support Python version 3.9.17. Necessary packages include pandas, geopandas, matplotlib, and plotly. Instruction on how to set up the Anaconda cse163 environent and VS Code are provided [here](https://courses.cs.washington.edu/courses/cse163/software/).
+All visualizations were developed through VS Code using the Anaconda cse163 environment that supports Python version 3.9.17. Necessary packages include pandas, geopandas, matplotlib, and plotly. Instructions on how to set up the Anaconda cse163 environent and VS Code are provided [here](https://courses.cs.washington.edu/courses/cse163/software/).
 
 ## Python Files
 `extract_and_merge.py` has functions defined to load in the xlsx Washington Overdose data and merge the Washington and U.S. datasets with geospatial data.
@@ -33,7 +33,7 @@ All visualizations were developed through VS Code using the Anaconda cse163 envi
 
 ## Run the Project 
 1. Go to any of the question_x.py modules.
-2. Type _python question_x.py_ in the VS Code terminal, replacing x with the appropriate question number (1-4), and then run.
+2. Type "_python question_x.py_" in the VS Code terminal, replacing x with the appropriate question number (1-4), and then run.
 3. Wait for the module to run. Note that this can take awhile since we are working with large datasets.
 4. Access a png image of your visualization in the cse163 environment folder on your local computer.
-5. If you would like to do a sanity check of your visualization, go to the test.py module, type _python test.py_ in the terminal, then run.
+5. If you would like to do a sanity check of your visualization, go to the test.py module, type "_python test.py_" in the terminal, then run.
