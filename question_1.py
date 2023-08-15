@@ -50,3 +50,7 @@ def main():
 
     # Call method to answer research question
     wa_overdose_change(xlsx_file)
+
+
+if __name__ == "__main__":
+    main()
