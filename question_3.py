@@ -21,22 +21,6 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     This function takes in the national drug overdose dataset and plots
     the number of drug overdose deaths across the U.S. in 2022.
     """
-    # Why are you reading this file? this file is already merged in
-    # national_geo_data
-    # Can you just save natioanl_geo_data so that you can use it later
-    # unchanged for the plotting?
-    # Anyway I tried to rewrite but it didn't work so maybe it is
-    # the only way idkkkkk
-    shp_file = gpd.read_file('cse163/Data/geodata/cb_2022_us_county_500k.shp')
-    is_mainland = (shp_file['STUSPS'] != 'AK') & \
-                  (shp_file['STUSPS'] != 'HI') & \
-                  (shp_file['STUSPS'] != 'GU') & \
-                  (shp_file['STUSPS'] != 'PR') & \
-                  (shp_file['STUSPS'] != 'MP') & \
-                  (shp_file['STUSPS'] != 'AS') & \
-                  (shp_file['STUSPS'] != 'VI')
-    shp_file = shp_file[is_mainland]
-
     usa_data = national_geo_data[['State', 'Year', 'Month', 'Period',
                                   'Indicator', 'Data Value',
                                   'geometry']].copy()
@@ -56,10 +40,10 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
 
     # Plot data
     fig, ax = plt.subplots(1, figsize=(15, 7))
-    shp_file.plot(ax=ax, color='#EEEEEE')
+    usa_data.plot(ax=ax, color='#EEEEEE')
     usa_data.plot(ax=ax, column='Data Value', legend=True)
     plt.title('National Drug Overdose Deaths in 2022', fontsize=16)
-    plt.savefig('wa_versus_us.png')
+    fig.savefig('wa_versus_us.png')
 
 
 def main():
