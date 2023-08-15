@@ -129,6 +129,8 @@ def test_race_death_wa(wa_race_data):
     print('Printing table of death counts per capita in King County (2022):')
     print()
     print(king_county)
+    print()
+    print('Total Population')
 
 
 def main():

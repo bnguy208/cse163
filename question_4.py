@@ -32,8 +32,8 @@ def race_death_wa(wa_race_data: pd.DataFrame) -> None:
     king_county['Death Count'] = king_county['Death Count'].astype(float)
 
     # Normalize to total population
-    tot_pop = king_county['Population'].sum()
-    king_county['Death per Capita'] = king_county['Death Count']/tot_pop
+    king_county['Death per Capita'] = \
+        king_county['Death Count']/king_county['Population']
 
     # Plot
     plt.figure(figsize=(15, 7))
