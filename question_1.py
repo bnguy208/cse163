@@ -22,7 +22,7 @@ def wa_overdose_change(wa_data:  pd.ExcelFile,
     that shows the number  of drug overdose cases in Washington
     from 2016-2022.
 
-    The timeframe can be chagned by using default parameters. 
+    The timeframe can be chagned by using default parameters.
     """
     geography = wa_data["Geography"] == 'County'
     drug = wa_data["Drug Category"] == "Any Drug"
