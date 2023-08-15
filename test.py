@@ -98,8 +98,34 @@ def test_wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     print(usa_data)
 
 
-# def race_death_wa():
-#     pass
+def test_race_death_wa(wa_race_data):
+    king_county = wa_race_data[['Year', 'Location', 'Drug Category', 'Race',
+                                'Time Aggregation', 'Death Count',
+                                'Population']].copy()
+
+    # Filter data
+    year = (king_county['Year'] == 2022)
+    is_king = (king_county['Location'] == 'King County')
+    drug = (king_county['Drug Category'] == 'Any Drug')
+    time = (king_county['Time Aggregation'] == '1 year rolling counts')
+    not_star = (king_county['Death Count']) != '*'
+
+    king_county = king_county[year & is_king & drug & time & not_star]
+    king_county['Death Count'] = king_county['Death Count'].astype(float)
+
+    # Normalize to total population
+    tot_pop = king_county['Population'].sum()
+    king_county['Death per Capita'] = king_county['Death Count']/tot_pop
+
+    # Slice dataframe
+    king_county = king_county[['Race', 'Death per Capita']]
+
+    # Print datatable
+    print()
+    print('QUESTION 4')
+    print('Printing table of death counts per capita in King County (2022):')
+    print()
+    print(king_county)
 
 
 def main():
@@ -110,11 +136,14 @@ def main():
                             xlsx_file)
     national_geo_data = merge_geo("Data/geodata/cb_2022_us_county_500k.shp",
                                   csv_file_name="Data/NationalOverdose.csv")
+    wa_race_data = extract_xlsx("Data/OverdoseDeathWA.xlsx",
+                                "By Demo-RE")
 
     # Test methods
     test_wa_overdose_change(xlsx_file)
     test_overdose_deaths_counties(wa_geo_data)
     test_wa_versus_us(national_geo_data)
+    test_race_death_wa(wa_race_data)
 
 
 if __name__ == "__main__":
