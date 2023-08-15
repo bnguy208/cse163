@@ -38,6 +38,12 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     # Filter data
     usa_data = usa_data[any_drug & year & month & states]
 
+    # Further slicing
+    usa_data = usa_data[['State', 'Data Value', 'geometry']]
+
+    # Group by state and sum death counts
+    usa_data = usa_data.dissolve(by='State', aggfunc='sum')
+
     # Plot data
     fig, ax = plt.subplots(1, figsize=(15, 7))
     usa_data.plot(ax=ax, color='#EEEEEE')

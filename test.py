@@ -63,8 +63,38 @@ def test_overdose_deaths_counties(wa_geo_data: gpd.GeoDataFrame,
     #     year_data.plot(ax=ax, column='Death Count', legend=True)
 
 
-# def test_wa_versus_us():
-#     pass
+def test_wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
+    """
+    This function tests the wa_versus_us method from question_3.py
+    """
+    usa_data = national_geo_data[['State', 'Year', 'Month', 'Period',
+                                  'Indicator', 'Data Value']].copy()
+    usa_data['Year'] = usa_data['Year'].astype(str)
+    usa_data['Data Value'] = usa_data['Data Value'].str.replace(',', '')
+    usa_data['Data Value'] = usa_data['Data Value'].fillna('0').astype(float)
+
+    # Create masks
+    any_drug = (usa_data['Indicator'] == 'Number of Drug Overdose Deaths')
+    year = (usa_data['Year'] == '2022')
+    month = (usa_data['Month'] == 'December')
+    states = (usa_data['State'] != 'AK') & (usa_data['State'] != 'HI') & \
+             (usa_data['State'] != 'YC') & (usa_data['State'] != 'US')
+
+    # Filter data
+    usa_data = usa_data[any_drug & year & month & states]
+
+    # Further slicing
+    usa_data = usa_data[['State', 'Data Value']]
+
+    # Group by state and sum up death counts
+    usa_data = usa_data.groupby('State')['Data Value'].sum()
+
+    # Print datatable
+    print()
+    print('QUESTION 3')
+    print('Printing table of national death counts in 2022:')
+    print()
+    print(usa_data)
 
 
 # def race_death_wa():
@@ -77,10 +107,13 @@ def main():
                              "By Location and Date")
     wa_geo_data = merge_geo("Data/geodata/cb_2022_us_county_500k.shp",
                             xlsx_file)
+    national_geo_data = merge_geo("Data/geodata/cb_2022_us_county_500k.shp",
+                                  csv_file_name="Data/NationalOverdose.csv")
 
     # Test methods
     test_wa_overdose_change(xlsx_file)
     test_overdose_deaths_counties(wa_geo_data)
+    test_wa_versus_us(national_geo_data)
 
 
 if __name__ == "__main__":
