@@ -23,9 +23,13 @@ def extract_xlsx(xlsx_name: str, ws_name: str) -> pd.ExcelFile:
     xlsx = pd.ExcelFile(xlsx_name)
     return pd.read_excel(xlsx, ws_name)
 
+# func def with type annotations:
+# def merge_geo(shp_file_name: str, xlsx_file: None | pd.ExcelFile = None,
+# csv_file_name: None | str = None) -> gpd.GeoDataFrame:
 
-def merge_geo(shp_file_name: str, xlsx_file: None | pd.ExcelFile = None,
-              csv_file_name: None | str = None) -> gpd.GeoDataFrame:
+
+def merge_geo(shp_file_name: str, xlsx_file=None,
+              csv_file_name=None) -> gpd.GeoDataFrame:
     """
     This function takes the name of the shapes file and Excel workbook file OR
     a CSV file and returns a geospatial dataframe that joins these two datasets
@@ -172,23 +176,67 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
 
 
 # (4) How does race impact overdose deaths in Washington? - Karin
+def race_death_wa(data) -> None:
+    wa_data = data[data["STATE_NAME"] == "Washington"].copy()
+    drug = wa_data["Drug Category"] == "Any Drug"
+    wa_data["Year"] = pd.to_numeric(data["Year"], errors="coerce")
+    time = wa_data["Time Aggregation"] == "1 year rolling counts"
+    remove_star = wa_data["Death Count"] != "*"
+    county_data = wa_data[drug & time & remove_star].copy()
+    county_data["Death Count"] = county_data["Death Count"].astype("int")
+
+    # Some race names had * at the end so I took them out
+    county_data['Race'] = county_data['Race'].apply(remove_race_asterisk)
+
+    # Not sure how these categories are defined in the dataset
+    # county_data = county_data[county_data['Race'] != 'Hispanic']
+    # county_data = county_data[county_data['Race'] != 'Unknown']
+    # county_data = county_data[county_data['Race'] != 'Multiple Races*']
+
+    # absolute, bar height shows change in total overdose deaths
+    fig = px.histogram(county_data, x='Year', y='Death Count', color='Race')
+
+    '''
+    # trying to have each bar be 100% but this doesn't make sense yet
+    percent_data = county_data
+    grouped_year = percent_data.groupby('Year')['Death Count'].sum()
+    percent_data['Race Percent'] = (percent_data['Death Count'])/(grouped_year[str(percent_data['Year'])])
+    fig = px.histogram(percent_data, x='Year', y='Race Percent', color='Race Percent')
+    '''
+
+    fig.update_layout(barmode='stack')
+    fig.update_yaxes(type='log')
+    fig.write_image('race_death_wa.png')
+
+
+def remove_race_asterisk(s: str) -> str:
+    if s[(len(s)-1):] == '*':
+        s = s[:(len(s)-1)]
+    return s
 
 
 def main():
     # Loading in the overdose data
-    xlsx_file = extract_xlsx("cse163/Data/OverdoseDeathWA.xlsx",
+    xlsx_file = extract_xlsx("Data/OverdoseDeathWA.xlsx",
                              "By Location and Date")
-    wa_geo_data = merge_geo("cse163/Data/geodata/cb_2022_us_county_500k.shp",
+    wa_geo_data = merge_geo("Data/geodata/cb_2022_us_county_500k.shp",
                             xlsx_file)
+    # Accessing the right excel tab for race_death_wa()
+    xlsx_file_race = extract_xlsx("Data/OverdoseDeathWA.xlsx",
+                             "By Demo-RE")
+    wa_geo_data_race = merge_geo("Data/geodata/cb_2022_us_county_500k.shp",
+                            xlsx_file_race)
+
     national_geo_data = merge_geo(
-        "cse163/Data/geodata/cb_2022_us_county_500k.shp",
-        csv_file_name="cse163/Data/NationalOverdose.csv")
+        "Data/geodata/cb_2022_us_county_500k.shp",
+        csv_file_name="Data/NationalOverdose.csv")
 
     # Methods to answer research questions
-    wa_overdose_change(xlsx_file)
-    overdose_deaths_counties(wa_geo_data)
-    wa_versus_us(national_geo_data)
+    # wa_overdose_change(xlsx_file)
+    # overdose_deaths_counties(wa_geo_data)
+    # wa_versus_us(national_geo_data)
     # most_prevalent_drug(national_geo_data)
+    race_death_wa(wa_geo_data_race)
 
 
 if __name__ == "__main__":
