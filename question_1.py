@@ -40,8 +40,6 @@ def wa_overdose_change(wa_data:  pd.ExcelFile,
     )
     fig.update_layout(title_x=0.5, title_y=0.95, font=dict(size=15))
     fig.update_traces(line=dict(width=4), marker=dict(size=10))
-
-    # fig.show()
     fig.write_image('wa_overdose.png')
 
 
