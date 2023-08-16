@@ -69,7 +69,8 @@ def test_wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     This function tests the wa_versus_us method from question_3.py
     """
     usa_data = national_geo_data[['State', 'Year', 'Month', 'Period',
-                                  'Indicator', 'Data Value']].copy()
+                                  'Indicator', 'Data Value',
+                                  'COUNTYNS']].copy()
     usa_data['Year'] = usa_data['Year'].astype(str)
     usa_data['Data Value'] = usa_data['Data Value'].str.replace(',', '')
     usa_data['Data Value'] = usa_data['Data Value'].fillna('0').astype(float)
@@ -121,16 +122,18 @@ def test_race_death_wa(wa_race_data):
     king_county['Death per Capita'] = king_county['Death Count']/tot_pop
 
     # Slice dataframe
-    king_county = king_county[['Race', 'Death per Capita']]
+    king_county = king_county[['Race', 'Death Count', 'Population',
+                               'Death per Capita']]
 
     # Print datatable
     print()
     print('QUESTION 4')
     print('Printing table of death counts per capita in King County (2022):')
     print()
-    print(king_county)
+    print(king_county.loc[:, ['Race', 'Death per Capita']])
     print()
-    print('Total Population')
+    print('Sanity Check: Deaths Counts & Population')
+    print(king_county.loc[:, ['Race', 'Death Count', 'Population']])
 
 
 def main():
