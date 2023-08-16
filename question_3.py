@@ -42,7 +42,7 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     usa_data = usa_data[['State', 'Data Value', 'geometry']]
 
     # Group by state and sum death counts
-    usa_data = usa_data.dissolve(by='State', aggfunc='sum')
+    usa_data = usa_data.dissolve(by='State')
 
     # Plot data
     fig, ax = plt.subplots(1, figsize=(15, 7))
