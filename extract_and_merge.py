@@ -2,32 +2,28 @@
 Daria Gileva, Brandon Nguyen, Karin Stoddart
 CSE 163 AA
 
-This program explores opioid overdose cases in the United States. It uses
-national drug overdose data and Washington drug overdose data. The methods
-in this program read in these datasets and combine them with geospatial
-data to produce visualizations that allow us to answer questions about
-opioid overdose across the U.S. and within Washington.
+This program loads in and transforms Washington and U.S. overdose data, which
+are to be used in the runnable Python modules (question_1.py, question_2.py,
+question_3.py, question_4.py) for the analysis of drug overdose deaths in
+Washington state.
 """
 
 import pandas as pd
 import geopandas as gpd
+from typing import Union
 
 
 def extract_xlsx(xlsx_name: str, ws_name: str) -> pd.ExcelFile:
     """
     This function takes the path of a multi-sheet Excel workbook file and the
-    name of the workshee of interest and returns a Pandas dataframe.
+    name of the worksheet of interest and returns a Pandas dataframe.
     """
     xlsx = pd.ExcelFile(xlsx_name)
     return pd.read_excel(xlsx, ws_name)
 
-# func def with type annotations:
-# def merge_geo(shp_file_name: str, xlsx_file: None | pd.ExcelFile = None,
-# csv_file_name: None | str = None) -> gpd.GeoDataFrame:
 
-
-def merge_geo(shp_file_name: str, xlsx_file=None,
-              csv_file_name=None) -> gpd.GeoDataFrame:
+def merge_geo(shp_file_name: str, xlsx_file: Union(None, pd.ExcelFile) = None,
+              csv_file_name: Union(None, str) = None) -> gpd.GeoDataFrame:
     """
     This function takes the name of the shapes file and Excel workbook file OR
     a CSV file and returns a geospatial dataframe that joins these two datasets
