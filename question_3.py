@@ -42,14 +42,14 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     usa_data = usa_data[['State', 'Data Value', 'geometry']]
 
     # Group by state and sum death counts
-    usa_data = usa_data.dissolve(by='State', aggfunc='sum')
+    usa_data = usa_data.dissolve(by='State')
 
     # Plot data
     fig, ax = plt.subplots(1, figsize=(15, 7))
     usa_data.plot(ax=ax, color='#EEEEEE')
     usa_data.plot(ax=ax, column='Data Value', legend=True)
     plt.title('National Drug Overdose Deaths in 2022', fontsize=16)
-    fig.savefig('wa_versus_us.png')
+    fig.savefig('wa_versus_usTEST.png')
 
 
 def main():

@@ -88,7 +88,7 @@ def test_wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     usa_data = usa_data[['State', 'Data Value']]
 
     # Group by state and sum up death counts
-    usa_data = usa_data.groupby('State')['Data Value'].sum()
+    usa_data = usa_data.groupby('State')['Data Value'].first().reset_index()
 
     # Print datatable
     print()
