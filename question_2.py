@@ -15,8 +15,9 @@ from extract_and_merge import extract_xlsx, merge_geo
 
 
 def overdose_deaths_counties(wa_geo_data: gpd.GeoDataFrame,
-                             drug_name='Any Drug',
-                             year_start=2016.0, year_end=2022.0) -> None:
+                             drug_name: str = 'Any Drug',
+                             year_start: float = 2016.0,
+                             year_end: float = 2022.0) -> None:
     """
     This function takes in the geospatial dataframe and creates subplots
     of drug overdose cases in different counties in Washington over a

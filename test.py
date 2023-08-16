@@ -2,7 +2,9 @@
 Daria Gileva, Brandon Nguyen, Karin Stoddart
 CSE 163 AA
 
-This file tests the methods in the script.
+This file tests the methods in the script. Each test function prints a
+dataframe in the terminal used to do a sanity check of each of the four
+visualizations.
 """
 
 from extract_and_merge import extract_xlsx, merge_geo
@@ -10,7 +12,9 @@ import pandas as pd
 import geopandas as gpd
 
 
-def test_wa_overdose_change(wa_data, start=2016.0, end=2022.0) -> pd.DataFrame:
+def test_wa_overdose_change(wa_data: pd.ExcelFile,
+                            start: float = 2016.0,
+                            end: float = 2022.0) -> pd.DataFrame:
     """
     This function tests the wa_overdose_change() method from question_1.py
     """
@@ -32,8 +36,9 @@ def test_wa_overdose_change(wa_data, start=2016.0, end=2022.0) -> pd.DataFrame:
 
 
 def test_overdose_deaths_counties(wa_geo_data: gpd.GeoDataFrame,
-                                  drug_name='Any Drug',
-                                  year_start=2016.0, year_end=2022.0) -> None:
+                                  drug_name: str = 'Any Drug',
+                                  year_start: float = 2016.0,
+                                  year_end: float = 2022.0) -> pd.DataFrame:
     """
     This function tests the overdose_deaths_counties() method
     from question_2.py
@@ -41,7 +46,7 @@ def test_overdose_deaths_counties(wa_geo_data: gpd.GeoDataFrame,
     data = wa_geo_data[wa_geo_data['STATE_NAME'] == 'Washington'].copy()
 
     # Create masks
-    drug = data['Drug Category'] == 'Any Drug'
+    drug = data['Drug Category'] == drug_name
     county = data['Geography'] == 'County'
     time = (data['Time Aggregation'] == '1 year rolling counts')
     remove_star = data['Death Count'] != '*'
@@ -62,7 +67,7 @@ def test_overdose_deaths_counties(wa_geo_data: gpd.GeoDataFrame,
     print('QUESTION 2')
     print('Printing table of death counts in Washington counties 2016-2022:')
     print()
-    for i in range(int(2016.0), int(2022.0)+1):
+    for i in range(int(year_start), int(year_end)+1):
         year = (county_data['Year'] == i)
         year_data = county_data[year]
         print('Overdose Deaths in ' + str(i) + ':')
@@ -71,7 +76,7 @@ def test_overdose_deaths_counties(wa_geo_data: gpd.GeoDataFrame,
         print()
 
 
-def test_wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
+def test_wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> pd.DataFrame:
     """
     This function tests the wa_versus_us method from question_3.py
     """
@@ -106,7 +111,7 @@ def test_wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     print(usa_data)
 
 
-def test_race_death_wa(wa_race_data):
+def test_race_death_wa(wa_race_data: pd.ExcelFile) -> pd.DataFrame:
     """
     This function tests the race_death_wa method from question_4.py
     """
