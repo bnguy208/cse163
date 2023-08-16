@@ -10,7 +10,7 @@ Washington state.
 
 import pandas as pd
 import geopandas as gpd
-from typing import Union
+from typing import Optional
 
 
 def extract_xlsx(xlsx_name: str, ws_name: str) -> pd.ExcelFile:
@@ -22,8 +22,8 @@ def extract_xlsx(xlsx_name: str, ws_name: str) -> pd.ExcelFile:
     return pd.read_excel(xlsx, ws_name)
 
 
-def merge_geo(shp_file_name: str, xlsx_file: Union(None, pd.ExcelFile) = None,
-              csv_file_name: Union(None, str) = None) -> gpd.GeoDataFrame:
+def merge_geo(shp_file_name: str, xlsx_file: Optional[pd.ExcelFile] = None,
+              csv_file_name: Optional[str] = None) -> gpd.GeoDataFrame:
     """
     This function takes the name of the shapes file and Excel workbook file OR
     a CSV file and returns a geospatial dataframe that joins these two datasets
