@@ -2,11 +2,11 @@
 Daria Gileva, Brandon Nguyen, Karin Stoddart
 CSE 163 AA
 
-This program explores opioid overdose cases in the United States. It uses
-national drug overdose data and Washington drug overdose data. The methods
-in this program read in these datasets and combine them with geospatial
-data to produce visualizations that allow us to answer questions about
-opioid overdose across the U.S. and within Washington.
+This module contains a function that is a part of the program that explores
+drug overdose deaths. It uses U.S. national drug overdose data merged with
+geospatial data and allows us to answer questions about how drug overdose
+deaths compare across states in mainland U.S. in addition to the District
+of Columbia.
 """
 
 import geopandas as gpd
@@ -18,8 +18,9 @@ from extract_and_merge import merge_geo
 # other states in the USA? - Brandon
 def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     """
-    This function takes in the national drug overdose dataset and plots
-    the number of drug overdose deaths across the U.S. in 2022.
+    This function takes in the merged national drug overdose geodata, plots
+    the number of drug overdose deaths across the mainland U.S. in 2022,
+    and saves the file as wa_versus_us.png.
     """
     usa_data = national_geo_data[['State', 'Year', 'Month', 'Period',
                                   'Indicator', 'Data Value', 'COUNTYNS',
