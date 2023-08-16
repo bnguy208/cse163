@@ -23,7 +23,7 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     and saves the file as wa_versus_us.png.
     """
     usa_data = national_geo_data[['State', 'Year', 'Month', 'Period',
-                                  'Indicator', 'Data Value', 'COUNTYNS',
+                                  'Indicator', 'Data Value',
                                   'geometry']].copy()
     usa_data['Year'] = usa_data['Year'].astype(str)
     usa_data['Data Value'] = usa_data['Data Value'].str.replace(',', '')
