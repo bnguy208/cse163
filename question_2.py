@@ -2,11 +2,11 @@
 Daria Gileva, Brandon Nguyen, Karin Stoddart
 CSE 163 AA
 
-This function is a part of the program that explores opioid overdose cases
-in the United States. It uses national drug overdose data and Washington drug
-overdose data. This method combines the WA drug overdose data with geospatial
-data and produces multiple geoplots that allow us to answer questions about
-opioid overdose numbers in WA state counties over a specified time period.
+This module contains a function that is a part of the program that explores
+drug overdose deaths. It uses Washington drug overdose data merged with
+geospatial data and allows us to answer questions about how patterns in drug
+overdose deaths change over a specified time period across different counties
+in Washington state.
 """
 
 import geopandas as gpd
@@ -18,11 +18,12 @@ def overdose_deaths_counties(wa_geo_data: gpd.GeoDataFrame,
                              drug_name='Any Drug',
                              year_start=2016.0, year_end=2022.0) -> None:
     """
-    This function takes in the geospatial dataframe and plots the drug
-    overdose cases in different counties in Washington over a specified
-    timeframe. The timeframe can be changed using default parameters as well
-    as a category of drug name. Default drug is Any Drug but it can changed
-    to other catergories in the dataset.
+    This function takes in the geospatial dataframe and creates subplots
+    of drug overdose cases in different counties in Washington over a
+    specified timeframe. The timeframe and drug name can be changed using
+    default parameters.
+
+    The plot is saved as a file named counties_overdose.png.
     """
     data = wa_geo_data[wa_geo_data['STATE_NAME'] == 'Washington'].copy()
 

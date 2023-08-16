@@ -2,11 +2,10 @@
 Daria Gileva, Brandon Nguyen, Karin Stoddart
 CSE 163 AA
 
-This program explores opioid overdose cases in the United States. It uses
-national drug overdose data and Washington drug overdose data. The methods
-in this program read in these datasets and combine them with geospatial
-data to produce visualizations that allow us to answer questions about
-opioid overdose across the U.S. and within Washington.
+This module contains a function that is a part of the program that explores
+drug overdose deaths. It uses Washington drug overdose data. This module
+allows us to answer questions about the disproportionate impact of overdose
+deaths across different races.
 """
 
 import pandas as pd
@@ -15,19 +14,18 @@ import matplotlib.pyplot as plt
 from extract_and_merge import extract_xlsx
 
 
-# (4) How does race impact overdose deaths in Washington?
 def race_death_wa(wa_race_data: pd.DataFrame) -> None:
-    king_county = wa_race_data[
-        [
-            "Year",
-            "Location",
-            "Drug Category",
-            "Race",
-            "Time Aggregation",
-            "Death Count",
-            "Population",
-        ]
-    ].copy()
+    """
+    This function takes in the Washington overdose dataset and produces
+    a bar graph of overdose death counts in King County 2022 for each race.
+    The death counts for each race are normalized to the total population of
+    that particular race in King County.
+
+    The graph is saved as a file named wa_race_overdose.png.
+    """
+    king_county = wa_race_data[['Year', 'Location', 'Drug Category', 'Race',
+                                'Time Aggregation', 'Death Count',
+                                'Population']].copy()
 
     # Filter data
     year = king_county["Year"] == 2022
