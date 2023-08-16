@@ -38,30 +38,37 @@ def test_overdose_deaths_counties(wa_geo_data: gpd.GeoDataFrame,
     This function tests the overdose_deaths_counties() method
     from question_2.py
     """
-    pass
-    # data = wa_geo_data[wa_geo_data['STATE_NAME'] == 'Washington'].copy()
+    data = wa_geo_data[wa_geo_data['STATE_NAME'] == 'Washington'].copy()
 
-    # # Create masks
-    # drug = data['Drug Category'] == drug_name
-    # county = data['Geography'] == 'County'
-    # time = (data['Time Aggregation'] == '1 year rolling counts')
-    # remove_star = data['Death Count'] != '*'
+    # Create masks
+    drug = data['Drug Category'] == 'Any Drug'
+    county = data['Geography'] == 'County'
+    time = (data['Time Aggregation'] == '1 year rolling counts')
+    remove_star = data['Death Count'] != '*'
+    counties = (data['NAMELSAD'] == 'Skagit County') | \
+               (data['NAMELSAD'] == 'Snohomish County') | \
+               (data['NAMELSAD'] == 'King County') | \
+               (data['NAMELSAD'] == 'Pierce County')
 
-    # # Filter dataframe
-    # county_data = data[drug & county & time & remove_star].copy()
-    # county_data['Death Count'] = county_data['Death Count'].astype('int')
+    # Filter dataframe
+    county_data = data[drug & county & time & remove_star & counties].copy()
+    county_data['Death Count'] = county_data['Death Count'].astype('int')
 
-    # print()
-    # print('QUESTION 2')
-    # print('Printing table of death counts in each county:')
+    # Slice dataframe
+    county_data = county_data[['NAMELSAD', 'Year', 'Death Count']]
 
-    # for i in range(int(year_start), int(year_end)+1):
-    #     year = (county_data['Year'] == i)
-    #     year_data = county_data[year]
-
-    #     print()
-    #     data.plot(ax=ax, color='#d3d3d3')
-    #     year_data.plot(ax=ax, column='Death Count', legend=True)
+    # Print statements
+    print()
+    print('QUESTION 2')
+    print('Printing table of death counts in Washington counties 2016-2022:')
+    print()
+    for i in range(int(2016.0), int(2022.0)+1):
+        year = (county_data['Year'] == i)
+        year_data = county_data[year]
+        print('Overdose Deaths in ' + str(i) + ':')
+        print()
+        print(year_data)
+        print()
 
 
 def test_wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
