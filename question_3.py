@@ -22,7 +22,7 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     the number of drug overdose deaths across the U.S. in 2022.
     """
     usa_data = national_geo_data[['State', 'Year', 'Month', 'Period',
-                                  'Indicator', 'Data Value',
+                                  'Indicator', 'Data Value', 'COUNTYNS',
                                   'geometry']].copy()
     usa_data['Year'] = usa_data['Year'].astype(str)
     usa_data['Data Value'] = usa_data['Data Value'].str.replace(',', '')
