@@ -42,7 +42,7 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     # Further slicing
     usa_data = usa_data[['State', 'Data Value', 'geometry']]
 
-    # Group by state and sum death counts
+    # Group by state
     usa_data = usa_data.dissolve(by='State')
 
     # Plot data
@@ -54,6 +54,7 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
 
 
 def main():
+    # Load in data
     national_geo_data = merge_geo("Data/geodata/cb_2022_us_county_500k.shp",
                                   csv_file_name="Data/NationalOverdose.csv")
 
