@@ -49,7 +49,7 @@ def wa_versus_us(national_geo_data: gpd.GeoDataFrame) -> None:
     usa_data.plot(ax=ax, color='#EEEEEE')
     usa_data.plot(ax=ax, column='Data Value', legend=True)
     plt.title('National Drug Overdose Deaths in 2022', fontsize=16)
-    fig.savefig('wa_versus_usTEST.png')
+    fig.savefig('wa_versus_us.png')
 
 
 def main():
