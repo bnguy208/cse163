@@ -18,6 +18,8 @@ Overdose deaths are visualized geospatially using geospatial data from the Unite
 ## Installations
 All visualizations were developed through VS Code using the Anaconda cse163 environment that supports Python version 3.9.17. Necessary packages include pandas, geopandas, matplotlib, and plotly. Instructions on how to set up the Anaconda cse163 environent and VS Code are provided [here](https://courses.cs.washington.edu/courses/cse163/software/).
 
+Additionally, to support union operators in type annotations, the Optional class had to be imported from the typing module. However, note that this would not have been necessary if Python version 3.10 were used.
+
 ## Python Files
 `extract_and_merge.py` has functions defined to load in the xlsx Washington Overdose data and merge the Washington and U.S. datasets with geospatial data.
 
